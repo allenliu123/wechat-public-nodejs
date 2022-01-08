@@ -14,6 +14,14 @@ function receiveMessage(req, type, callback) {
     })
 }
 
+function receiveEvent(req, eventType, callback) {
+  receiveMessage(req, 'event', function(msg) {
+    if (eventType === 'all' || msg.Event === eventType) {
+      callback(msg)
+    }
+  })
+}
+
 class Message {
   constructor() {
     
@@ -58,6 +66,30 @@ class Message {
 
   onLink(callback) {
     receiveMessage(this.req, 'link', callback);
+  }
+
+  onEvent(type, callback) {
+    receiveEvent(this.req, type, callback);
+  }
+
+  onEventAll(callback) {
+    receiveEvent(this.req, 'all', callback);
+  }
+
+  onEventClick(callback) {
+    receiveEvent(this.req, 'CLICK', callback);
+  }
+
+  onEventView(callback) {
+    receiveEvent(this.req, 'VIEW', callback);
+  }
+
+  onEventSubscribe(callback) {
+    receiveEvent(this.req, 'subscribe', callback);
+  }
+
+  onEventUnsubscribe(callback) {
+    receiveEvent(this.req, 'unsubscribe', callback);
   }
 
   reply(msg, str) {
